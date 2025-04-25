@@ -1,0 +1,104 @@
+# Web-Based Wallet Generator
+
+This project is a modern and secure client-side HD wallet generator for both Ethereum and Solana blockchains. It is built using React, Tailwind CSS, and cryptographic libraries, and adheres to BIP-39 and BIP-32 standards for wallet derivation. It is fully responsive, professionally styled, and deployable to Vercel or similar platforms.
+
+## Features
+
+- Generate 12-word mnemonic phrases (BIP-39 standard)
+- Derive Ethereum wallets using secp256k1
+- Derive Solana wallets using ed25519
+- Toggle visibility of private keys securely
+- Add and remove multiple wallet instances
+- Copy keys and mnemonics to clipboard
+- Fully responsive UI with clean, dark Web3 design
+
+## Technologies Used
+
+- React (Frontend Framework)
+- Tailwind CSS (Utility-First Styling)
+- Vite (Bundler)
+- bip39 (Mnemonic phrase generation)
+- tweetnacl (Solana key pair cryptography)
+- @solana/web3.js (Solana blockchain utilities)
+- ethers.js (Ethereum key pair and wallet management)
+- ed25519-hd-key (Solana derivation path)
+
+## Project Structure
+
+```
+/src
+  ├── components
+  │   ├── Home.jsx
+  │   ├── Setup.jsx
+  │   ├── Wallet.jsx
+  │   ├── Learn.jsx
+  │   └── Footer.jsx
+  ├── App.jsx
+  ├── main.jsx
+  └── index.css
+```
+
+## Key Derivation Logic
+
+```js
+// 1. Generate Mnemonic
+import { generateMnemonic } from 'bip39';
+const mnemonic = generateMnemonic();
+
+// 2. Convert Mnemonic to Seed
+import { mnemonicToSeed } from 'bip39';
+const seed = await mnemonicToSeed(mnemonic);
+
+// 3. Derive Solana Keys (ed25519)
+import nacl from 'tweetnacl';
+import { derivePath } from 'ed25519-hd-key';
+import { Keypair } from '@solana/web3.js';
+
+const solanaPath = `m/44'/501'/0'/0'`;
+const derivedSeed = derivePath(solanaPath, seed.toString('hex')).key;
+const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
+const solanaKeypair = Keypair.fromSecretKey(secret);
+
+// 4. Derive Ethereum Keys (secp256k1)
+import { HDNodeWallet, Wallet as EthWallet } from 'ethers';
+
+const hdWallet = HDNodeWallet.fromSeed(seed);
+const ethPath = `m/44'/60'/0'/0/0`;
+const ethWallet = hdWallet.derivePath(ethPath);
+const ethPublicKey = ethWallet.address;
+const ethPrivateKey = ethWallet.privateKey;
+```
+
+## Setup Instructions
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/wallet-generator.git
+cd wallet-generator
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Build for production:
+```bash
+npm run build
+```
+
+5. Deploy to Vercel or Netlify using your preferred method.
+
+## Deployment
+This project is optimized for deployment using [Vercel](https://vercel.com/) but works with any static hosting service that supports SPA.
+
+## License
+This project is licensed under the MIT License.
+
+## Author
+Designed and developed by Omkumar Solanki
