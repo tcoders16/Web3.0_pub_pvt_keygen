@@ -28,9 +28,9 @@ export default function Setup() {
 
   // Render the screen
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-black text-white -sans flex flex-col items-center justify-center px-4 py-12">
       {/* Heading */}
-      <h2 className="text-4xl font-mono font-bold text-center mb-6">
+      <h2 className="text-4xl -mono -bold text-center mb-6">
         Secret Recovery Phrase
       </h2>
 
@@ -58,7 +58,7 @@ export default function Setup() {
         {/* Regenerate Phrase - Neon Red */}
         <button
           onClick={handleGenerateMnemonic}
-          className="bg-[#FF004F] text-white font-mono
+          className="bg-[#FF004F] text-white 
            px-6 py-2 rounded-md shadow-[0_0_20px_#FF004F] hover:shadow-[0_0_40px_#FF004F] transition duration-300"
         >
           Regenerate Phrase
@@ -67,7 +67,7 @@ export default function Setup() {
         {/* Continue - Neon Red */}
         <button
           onClick={handleContinue}
-          className="bg-[#FF004F] text-white font-mono px-6 py-2 rounded-md shadow-[0_0_20px_#FF004F] hover:shadow-[0_0_40px_#FF004F] transition duration-300"
+          className="bg-[#FF004F] text-white -mono px-6 py-2 rounded-md shadow-[0_0_20px_#FF004F] hover:shadow-[0_0_40px_#FF004F] transition duration-300"
         >
           Continue
         </button>
