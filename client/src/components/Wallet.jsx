@@ -1,3 +1,4 @@
+// Updated Wallet.jsx with Neon Style Buttons (Violet, Orange, Pink, Blue)
 "use client";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -12,15 +13,13 @@ export default function Wallet() {
   const location = useLocation();
   const { chain } = useParams();
   const [wallet, setWallet] = useState(null);
-  const [mnemonic, setMnemonic] = useState(location.state?.mnemonic || ""); // Use mnemonic from Setup page or default
-  const [wallets, setWallets] = useState([]); // State to store multiple wallets
-  const [showPrivateKeys, setShowPrivateKeys] = useState({}); // State to toggle private key visibility
-  const [showAllPrivateKeys, setShowAllPrivateKeys] = useState(false); // State to toggle all private keys
+  const [mnemonic, setMnemonic] = useState(location.state?.mnemonic || "");
+  const [wallets, setWallets] = useState([]);
+  const [showPrivateKeys, setShowPrivateKeys] = useState({});
+  const [showAllPrivateKeys, setShowAllPrivateKeys] = useState(false);
 
-  // Generate wallet keys based on the mnemonic
   const handleGenerateWallet = async () => {
     if (!mnemonic) return;
-
     const seed = await mnemonicToSeed(mnemonic);
 
     if (chain === "solana") {
@@ -36,39 +35,33 @@ export default function Wallet() {
       const hd = HDNodeWallet.fromSeed(seed);
       const path = `m/44'/60'/0'/0/0`;
       const ethWallet = hd.derivePath(path);
-      const privateKey = ethWallet.privateKey;
-      const wallet = new EthWallet(privateKey);
       setWallet({
-        publicKey: wallet.address,
-        privateKey,
+        publicKey: ethWallet.address,
+        privateKey: ethWallet.privateKey,
       });
     }
   };
 
-  useEffect(() => {
-    handleGenerateWallet(); // Generate wallet on mount using the default mnemonic
-  }, [mnemonic]);
+  useEffect(() => { handleGenerateWallet(); }, [mnemonic]);
 
   const handleAddWallet = () => {
     if (wallet) {
-      setWallets([...wallets, wallet]); // Add the current wallet to the list
-      setShowPrivateKeys({ ...showPrivateKeys, [wallets.length]: false }); // Default private key visibility to hidden
+      setWallets([...wallets, wallet]);
+      setShowPrivateKeys({ ...showPrivateKeys, [wallets.length]: false });
     }
   };
 
   const handleClearAll = () => {
-    setWallets([]); // Clear all wallets
-    setShowPrivateKeys({}); // Reset private key visibility
+    setWallets([]);
+    setShowPrivateKeys({});
   };
 
   const handleDeleteWallet = (index) => {
-    const updatedWallets = wallets.filter((_, i) => i !== index); // Remove wallet at the specified index
-    setWallets(updatedWallets);
-
-    // Update private key visibility state
-    const updatedVisibility = { ...showPrivateKeys };
-    delete updatedVisibility[index];
-    setShowPrivateKeys(updatedVisibility);
+    const updated = wallets.filter((_, i) => i !== index);
+    setWallets(updated);
+    const visibility = { ...showPrivateKeys };
+    delete visibility[index];
+    setShowPrivateKeys(visibility);
   };
 
   const togglePrivateKeyVisibility = (index) => {
@@ -85,27 +78,25 @@ export default function Wallet() {
   const handleRegenerateMnemonic = async () => {
     const newMnemonic = await generateMnemonic();
     setMnemonic(newMnemonic);
-    setWallet(null); // Reset wallet when regenerating the phrase
+    setWallet(null);
   };
 
   return (
     <div className="min-h-screen bg-black text-white font-sans px-6 py-12 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-6">Wallet</h1>
+      <h1 className="text-3xl font-mono mb-6">Wallet</h1>
 
-      {/* Regenerate Mnemonic Phrase */}
-      <div className="mb-6">
-        <button
-          onClick={handleRegenerateMnemonic}
-          className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-lg font-bold text-white"
-        >
-          Regenerate Mnemonic Phrase
-        </button>
-      </div>
+      <button
+            onClick={handleRegenerateMnemonic}
+            className="bg-[#00FFFF] text-black font-mono px-6 py-3 rounded-lg 
+                        shadow-[0_0_20px_#00FFFF] hover:shadow-[0_0_40px_#00FFFF] 
+                        transition duration-300 mb-8"
+            >
+            Regenerate Mnemonic Phrase
+            </button>
 
-      {/* Display Mnemonic */}
       {mnemonic && (
         <div className="bg-white/5 border border-white/10 rounded-lg p-6 w-full max-w-3xl mb-6">
-          <h3 className="text-lg font-bold mb-4">Mnemonic Phrase</h3>
+          <h3 className="text-lg font-mono mb-4">Mnemonic Phrase</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {mnemonic.trim().split(/\s+/).map((word, index) => (
               <div
@@ -120,91 +111,80 @@ export default function Wallet() {
         </div>
       )}
 
-      {/* Display Wallet */}
-      {wallet ? (
+      {wallet && (
         <div className="w-full max-w-3xl bg-white/5 p-6 rounded-lg shadow-lg space-y-6">
           <div>
             <p className="text-gray-400 text-sm mb-1">Public Key:</p>
-            <p className="break-all font-mono bg-white/10 p-2 rounded">
-              {wallet.publicKey}
-            </p>
+            <p className="break-all font-mono bg-white/10 p-2 rounded">{wallet.publicKey}</p>
           </div>
           <div>
             <p className="text-gray-400 text-sm mb-1">Private Key:</p>
-            <p className="break-all font-mono text-red-300 bg-white/10 p-2 rounded">
-              {showPrivateKeys[wallets.length]
-                ? wallet.privateKey
-                : "**********"}
+            <p className="break-all font-mono text-pink-300 bg-white/10 p-2 rounded">
+              {showPrivateKeys[wallets.length] ? wallet.privateKey : "**********"}
             </p>
             <button
               onClick={() => togglePrivateKeyVisibility(wallets.length)}
-              className="text-sm text-blue-400 hover:underline mt-1"
+              className="text-sm text-blue-400 hover:underline"
             >
               {showPrivateKeys[wallets.length] ? "Hide" : "Show"} Private Key
             </button>
           </div>
 
           <button
-            onClick={handleAddWallet} // Add wallet on button click
-            className="mt-4 bg-yellow-500 hover:bg-yellow-600 px-6 py-2 rounded-lg font-bold text-black"
+            onClick={handleAddWallet}
+            className="bg-[#FF00FF] text-white font-mono px-6 py-2 rounded-lg shadow-[0_0_15px_#FF00FF] hover:shadow-[0_0_30px_#FF00FF]"
           >
             Add Wallet
           </button>
         </div>
-      ) : (
-        <p className="text-gray-400">Generating wallet keys...</p>
       )}
 
-      {/* Display Added Wallets */}
       {wallets.length > 0 && (
         <div className="w-full max-w-3xl mt-8 space-y-6">
-          <h2 className="text-2xl font-bold mb-4">Added Wallets</h2>
+          <h2 className="text-2xl font-mono mb-4">Added Wallets</h2>
           <button
             onClick={toggleAllPrivateKeys}
-            className="mb-4 bg-green-500 hover:bg-green-600 px-6 py-2 rounded-lg font-bold text-white"
+            className="bg-[#00FFFF] text-black font-mono px-6 py-2 rounded-lg shadow-[0_0_15px_#00FFFF] hover:shadow-[0_0_30px_#00FFFF]"
           >
             {showAllPrivateKeys ? "Hide All Private Keys" : "Show All Private Keys"}
           </button>
+
           {wallets.map((w, index) => (
-            <div
-              key={index}
-              className="bg-white/5 p-4 rounded-lg shadow-md space-y-2"
-            >
-              <div>
-                <p className="text-gray-400 text-sm mb-1">Public Key:</p>
-                <p className="break-all font-mono bg-white/10 p-2 rounded">
-                  {w.publicKey}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm mb-1">Private Key:</p>
-                <input
-                  type={showAllPrivateKeys || showPrivateKeys[index] ? "text" : "password"}
-                  value={w.privateKey}
-                  readOnly
-                  className="break-all font-mono text-red-300 bg-white/10 p-2 rounded w-full"
-                />
-                <button
-                  onClick={() => togglePrivateKeyVisibility(index)}
-                  className="text-sm text-blue-400 hover:underline mt-1"
-                >
-                  {showPrivateKeys[index] ? "Hide" : "Show"} Private Key
-                </button>
-              </div>
+            <div key={index} className="bg-white/5 p-4 rounded-lg shadow-md">
+              <p className="text-gray-400 text-sm">Public Key:</p>
+              <p className="break-all font-mono bg-white/10 p-2 rounded">{w.publicKey}</p>
+              <p className="text-gray-400 text-sm mt-2">Private Key:</p>
+              <input
+                type={showAllPrivateKeys || showPrivateKeys[index] ? "text" : "password"}
+                value={w.privateKey}
+                readOnly
+                className="break-all font-mono text-pink-300 bg-white/10 p-2 rounded w-full"
+              />
               <button
-                onClick={() => handleDeleteWallet(index)} // Delete specific wallet
-                className="mt-2 bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold text-white"
+                onClick={() => togglePrivateKeyVisibility(index)}
+                className="text-sm font-mono text-blue-400 hover:underline"
               >
-                Delete Wallet
-              </button>
+                {showPrivateKeys[index] ? "Hide" : "Show"} Private Key
+              </button> <br/><br/>
+              <button
+                    onClick={() => handleDeleteWallet(index)}
+                    className="mt-2 bg-[#FF4500] text-white font-mono px-4 py-2 rounded-lg 
+                                shadow-[0_0_15px_#FF4500] hover:shadow-[0_0_30px_#FF6347] 
+                                transition duration-300"
+                    >
+                    Delete Wallet
+                    </button>
             </div>
           ))}
-          <button
-            onClick={handleClearAll} // Clear all wallets
-            className="mt-6 bg-gray-500 hover:bg-gray-600 px-6 py-2 rounded-lg font-bold text-white"
-          >
+
+            <button
+            onClick={handleClearAll}
+            className="mt-6 bg-[#8080FF] text-white font-mono px-6 py-2 rounded-lg 
+                        shadow-[0_0_15px_#8080FF] hover:shadow-[0_0_30px_#9999FF] 
+                        transition duration-300"
+            >
             Clear All Wallets
-          </button>
+            </button>
         </div>
       )}
     </div>

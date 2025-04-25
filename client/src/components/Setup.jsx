@@ -1,4 +1,3 @@
-// File: src/pages/Setup.jsx
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { generateMnemonic } from 'bip39';
@@ -31,7 +30,7 @@ export default function Setup() {
   return (
     <div className="min-h-screen bg-black text-white font-sans flex flex-col items-center justify-center px-4 py-12">
       {/* Heading */}
-      <h2 className="text-4xl font-orbitron font-bold text-center mb-6">
+      <h2 className="text-4xl font-mono font-bold text-center mb-6">
         Secret Recovery Phrase
       </h2>
 
@@ -56,15 +55,19 @@ export default function Setup() {
 
       {/* Buttons */}
       <div className="flex space-x-4">
+        {/* Regenerate Phrase - Neon Red */}
         <button
           onClick={handleGenerateMnemonic}
-          className="bg-yellow-500 hover:bg-yellow-400 px-6 py-2 rounded-md text-black font-medium shadow-md"
+          className="bg-[#FF004F] text-white font-mono
+           px-6 py-2 rounded-md shadow-[0_0_20px_#FF004F] hover:shadow-[0_0_40px_#FF004F] transition duration-300"
         >
           Regenerate Phrase
         </button>
+
+        {/* Continue - Neon Red */}
         <button
           onClick={handleContinue}
-          className="bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-md text-white font-medium shadow-md"
+          className="bg-[#FF004F] text-white font-mono px-6 py-2 rounded-md shadow-[0_0_20px_#FF004F] hover:shadow-[0_0_40px_#FF004F] transition duration-300"
         >
           Continue
         </button>

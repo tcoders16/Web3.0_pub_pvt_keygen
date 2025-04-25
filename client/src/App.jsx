@@ -12,7 +12,7 @@ import Footer from './components/Footer';
 export default function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-black text-white font-sans">
+      <div className="min-h-screen bg-black text-white">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/setup/:chain" element={<Setup />} />
