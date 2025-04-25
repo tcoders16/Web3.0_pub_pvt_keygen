@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Setup from './components/Setup';
 import Wallet from './components/Wallet';
 import Key from './components/Key';
+import Learn from './components/Learn';
 
 import Footer from './components/Footer';
 
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/setup/:chain" element={<Setup />} />
           <Route path="/wallet/:chain" element={<Wallet />} />
           <Route path="/key/:chain" element={<Key />} />
+          <Route path="/learn" element={<Learn />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

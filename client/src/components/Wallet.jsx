@@ -82,7 +82,7 @@ export default function Wallet() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white -sans px-6 py-12 flex flex-col items-center">
+    <div className="min-h-screen bg-black text-white font-black -sans px-6 py-12 flex flex-col items-center">
       <h1 className="text-3xl -mono mb-6">Wallet</h1>
 
       <button
@@ -184,7 +184,7 @@ export default function Wallet() {
                         transition duration-300"
             >
             Clear All Wallets
-            </button>
+            </button> <br/><br/><br/><br/><br/>
         </div>
       )}
     </div>
